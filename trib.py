@@ -1,4 +1,6 @@
 
+# tribonacci number problem from project euler
+
 import time
 
 p,q,r,k = [int(a) for a in input().split()]
@@ -6,7 +8,7 @@ k = 1 if k<1 else k
 
 start = time.time()
 
-count,i,n = 0,0,n
+count,i,n = 0,0,0
 while count < k:
     n = 2*i + 1
     i = i+1
