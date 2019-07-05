@@ -1,7 +1,7 @@
-__pycache__
-
+__pycache__/
 programming-problems-notes/
 **/logs
+**/bak
 
 *.log
 *.bak*.py
