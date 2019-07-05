@@ -123,7 +123,7 @@ def main():
     btree = BTree(root)
     btstr = str(btree)
     # print(btree.list())
-    # print("'{}'".format(str(btree)))
+    # print(btstr)
 
     st = "success" if btstr == str(BTree(btstr)) else "failed"
     print("Test " + st + ".")
