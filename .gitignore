@@ -13,6 +13,8 @@ sample-problems-solutions/
 
 *.bak*.java
 *.class
+**/_*.java
+**/_*.class
 
 .*.swp
 
