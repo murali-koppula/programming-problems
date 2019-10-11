@@ -1,11 +1,18 @@
 __pycache__/
+
 programming-problems-notes/
+sample-problems-solutions/
+
 **/logs
 **/bak
+**/bin
 
 *.log
 *.bak*.py
 *.pyc
+
+*.bak*.java
+*.class
 
 .*.swp
 
