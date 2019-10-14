@@ -15,6 +15,7 @@ sample-problems-solutions/
 *.class
 **/_*.java
 **/_*.class
+**/*env
 
 .*.swp
 
