@@ -1,0 +1,9 @@
+
+# export JAVA_HOME=/opt/java/jdk-11.0.1
+export JAVA_HOME=/opt/java/jdk1.8.0_192
+
+export PATH=/opt/anaconda3/bin:.:$JAVA_HOME/bin:$JAVA_HOME/jre/bin:/opt/google/chrome:/home/murali/.cargo/bin:/home/murali/.rvm/gems/ruby-2.5.1/bin:/home/murali/.rvm/gems/ruby-2.5.1@global/bin:/home/murali/.rvm/rubies/ruby-2.5.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/murali/.rvm/bin::/home/murali/.rvm/bin
+
+export WORKSPACE=/app/work/programming-problems/java
+export CLASSPATH=/app/work/programming-problems/java/bin
+
