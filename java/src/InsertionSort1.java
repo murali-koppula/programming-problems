@@ -7,10 +7,10 @@ import java.io.*;
  * https://www.hackerrank.com/challenges/insertionsort1/problem
 */
 
-public class InsertionSortA {
+public class InsertionSort1 {
     private static final Scanner scanner = new Scanner(System.in);
 
-    static void insertionSort1(int n, int[] arr) {
+    static void insertionSort(int n, int[] arr) {
         if (arr.length == 0)
             return;
 
@@ -41,7 +41,7 @@ public class InsertionSortA {
         String[] sarr = scanner.nextLine().split(" ");
         int[] arr = Arrays.stream(sarr).mapToInt(s -> Integer.parseInt(s)).toArray();
 
-        insertionSort1(n, arr);
+        insertionSort(n, arr);
     }
 }
 
