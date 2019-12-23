@@ -20,8 +20,7 @@ A. Requirements
 4. The functionality must be stackable or plugable. That is, if there is a change in the feed of
    the metrics, it should not require fundamental or major changes to the system.
 
-5. Higher usability; presntation it must be effective, easy to use, and evoke a higher user
-   engagement.
+5. Higher usability; presntation must be effective, easy to use, and evoke a higher user engagement.
 
 ----------------------------------------------------------------------------------------------------
 B. Design criteria
