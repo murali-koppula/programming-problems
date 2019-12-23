@@ -6,6 +6,8 @@ sample-problems-solutions/
 **/logs
 **/bak
 **/bin
+**/input
+**/output
 
 *.log
 *.bak*.py

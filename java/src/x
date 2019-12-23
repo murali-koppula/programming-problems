@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /app/work/programming-problems/java/env.sh
+
+# for i in 0 20 50 100 200 300 400 500 600 700 800 900 1000; do
+for i in i i5 i10; do
+    # time java DynamicSummation <i$i
+    # time dse <i$i
+    time dse <$i
+done
+

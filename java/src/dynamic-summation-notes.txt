@@ -1,0 +1,184 @@
+
+-----------------------------------------------------------------------------
+DynamicSummation.bak16.java:
+---------------------------
+
+without QQueue.
+parse up for each node.
+
+$ time java DynamicSummation <i20
+
+real	1m12.952s
+user	1m14.105s
+sys	0m0.144s
+
+DynamicSummation.bak14.java:
+---------------------------
+
+with QQueue.
+
+$ time java DynamicSummation <i20
+
+real	0m1.078s
+user	0m2.586s
+sys	0m0.156s
+
+-----------------------------------------------------------------------------
+
+1. Parse tree corresponding to a report(r,t,m):
+
+   - Traverse the tree with root r.
+   - When node at t is encountered, ignore the subtrees outside of t.
+   - Start traversing the subtree with root t,
+   - Each of the following a,b,c represent an instance of TQueue. The tree nodes
+     within the (a,b,c) form the nodes of the respective TQueue instance.
+     a) subtree with root at t.
+     b) update subtrees nested within t.
+     c) branches of the update subtrees nested within t.
+   - QQueue is a queue of TQueue instances.
+   - Create a ststack instance
+   - Start traversing QQueue, and the nested TQueue instances.
+   - While traversing TQueue, at each TreeNode,
+     - increments the node count of the subtree (excluding the nested subtrees).
+     - if (id is an r of an update subtree)
+         - get all t's corresponding to r.
+         - parse up through the ancestors of the current ststack entry.
+         - for each of the ancestor that matched the t:
+             - set the bmap{r, bidx} where bidx is the ststack index of the branch of t leading to r.
+               bmap entry is null if r came before t.
+             - update the rbranch attribute of the ancester's 'r' entry to the
+               ststack index of the branch in the parse path.
+   - Add an entry to ststack after traversing each TQueue instance; an ststack entry:
+     - represents an update subtree, or its branch; it also represents an
+       instance of a TQueue (ie., a node in the QQueue).
+     - is identified by the node id of the root of the update subtree (t), or its branch;
+       it is equal to tqueue.id it represents.
+     - is instantiated from STNode, when a TQueue instance is dequeued from QQueue;
+     - stores the cardinality of the subtree (excluding the nested subtrees).
+     - if it a 't', then it containes a non-null bmap{r, bidx} where bidx is the ststack
+       index of the branch of t leading to r. bmap is null if r came before t.
+     - has an attribute pointing to its parent (which is at a lower index) in the ststack.
+     - element at index 0 correspond to the r of the report.
+     - is added to ststack after the corresponding QQueue node (TQueue instance) is processed.
+
+2. Pass the ststack from higher index to the (0) index.
+     - If it is an update node, for each r of the t corresponding to the entry, run the Updates (modpow sums).
+     - multiply the sums the times depending on whether the subtree is I or E.
+     - Accumulate the size to the (parent) entries which are at lower level.
+
+-----------------------------------------------------------------------------
+
+Examples:
+--------
+
+ 1
+  \
+   2
+    \
+     3
+      \
+       4
+        \
+         5
+
+5
+1 2
+2 3
+3 4
+4 5
+3
+U 4 3 2 2
+U 3 4 2 2
+R 1 2 8
+--------
+
+     ___ 1 ___
+    /    |    \
+   2     3     4
+  / \   / \     \
+ 5   6 7   8     9
+      / \
+    10   11
+        / \
+      12   13
+
+13
+1 2
+1 3
+1 4
+2 5
+2 6
+3 7
+3 8
+4 9
+7 10
+7 11
+11 12
+11 13
+5
+U 4 7 2 2
+U 3 7 2 2
+U 13 11 2 2
+U 11 3 2 2
+R 1 3 8
+-----------------------------------------------------------------------------
+
+created one time:
+----------------
+
+TreeNode
+TreeNode[] tl
+
+created one for each report:
+---------------------------
+
+STNode
+ArrayList<STNode> ststack
+
+-----------------------------------------------------------------------------
+editorial notes
+-----------------------------------------------------------------------------
+
+First let's try to solve the problem of a given a tree, fixed modulo and only query operation's. (Assuming each node has some value v).
+
+So, for solving this problem we will root the tree at 1. Now for every Query operation of with a given r and t, there are 3 possible cases:
+
+1. r is an ancestor of t and r.
+2. t is an ancestor of t and r.
+3. Neither r nor t is an ancestor for t and r.
+
+Now for Case 1 and Case 3, the answer is the same as the answer with root 1. For Case 2, the answer is the same as querying the whole tree with just 1 edge deletion. I would highly recommend the reader to take a pause here and think which edge it could be.
+
+Consider the path from r to t, let x be the node which is closest to t in the path from r to t [alternatively let x be the node which is at a distance of 1 edge from t in the path from t to r], if we delete the edge and consider the remaining tree, we will find that the remaining tree is the one in which we are interested in. But we really do not want to delete an edge and we also want to solve this problem.
+
+So, if we find the sum of the subtree rooted at x and subtract it from the sum of the full tree, we can get the answer which is required.
+
+Now when we have solved this problem, i would further urge my readers to think on how to solve the problem with one more conition added, the UPDATE operation, and keeping the modulo still fixed.
+
+You can easily take care of Update operation with the logic explained above to tranfer the queries from a tree rooted at 1 to a tree rooted at any node. Only pre-requisite i am assuming currently is that you know how to solve the problem with fixed root and fixed modulo. [Hint: You can store the dfs traversal order, then any continous segment of dfs traversal will correspond to a subtree in the tree, now the update and query can be done via segment trees or the binary indexed tree's]
+
+Now, let's come back to the original problem of mantaining it with any modulo. For this problem, the first approach that comes to mind is to store 101 trees ( because the constraint on mod was less than 102) for each mod, and query from specific values. But that much memory is not allowed and is a ultra slow solution to pass.
+
+Second approach that comes to mind is to store modulo using every high power of each prime number, there are 26 prime numbers and we need 26 data structures to solve it for each high power of prime number and then combine using Chinese Remainder theorem. High power of 2 is 64 ( becuase 128 > 101), high power of 3 is 81, etc,etc.
+
+It has been rude on my side to make that solution TLE because this problem can be solved using 5 data structures only instead of 26! All test cases were made to ensure that this solution does not pass, I apologise and I promise that there will be atleast 1-2 easy testcases from next time in my problem:).
+
+Further let me explain you the solution with 5 binary indexed trees:
+
+Mantain 5 data structures under these 5 modulos: 
+a. 64*81*25*49*11*13
+b. 17*19*23*29*31*37
+c. 43*47*53*59*79
+d. 61*67*71*73*41
+e. 83*89*97*101
+
+Now if you want sum mod p1^e1 * p2^e2 *.....* pn^en, simply see which all branches each part is, and calulate from each branch and later merge them using Chinese remainder theorem.
+
+For example, I want to have answer mod 2*3*17 (which is 102 and which is not in query but is only for demonstration purpose)
+
+- we will find the result modulo (a) and then take mod 6 on the result.
+- we will find the result modulo (b) and then take mod 17 on the result.
+- we will combine both results using Chinese Remainder theorem.
+
+-----------------------------------------------------------------------------
+
