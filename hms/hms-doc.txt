@@ -1,0 +1,103 @@
+
+HEALTH MONITORING SYSTEM
+
+----------------------------------------------------------------------------------------------------
+A. Requirements
+----------------------------------------------------------------------------------------------------
+
+1. Add value to the existing monitoring toolset by providing an effective access to a small but
+   critical subset of the metrics. The users must be presented with the offending events in a more
+   timely manner. That is, the system must enable the reporting of the offending events in a
+   hierarchical fashion based on the set thresholds, instead of broadcasting to a single set of
+   users at the same time.
+
+2. Monitor all the applications including the applications that are not currently monitered by a
+   licensed monitoring tool.
+
+3. Flexible in the collection of the metrics. Addition or removal of an monitored endpoint must
+   be configurable; it must not involve a change of code.
+
+4. The functionality must be stackable or plugable. That is, if there is a change in the feed of
+   the metrics, it should not require fundamental or major changes to the system.
+
+5. Higher usability; presntation it must be effective, easy to use, and evoke a higher user
+   engagement.
+
+----------------------------------------------------------------------------------------------------
+B. Design criteria
+----------------------------------------------------------------------------------------------------
+
+1. The system design must adhere to the 'high cohesion and low coupling' paradigm. The system  must
+   consist of highly cohisive concerns with loose coupling between the components. This is a general
+   guiding criteria that would impact, or result in other specific ones.
+
+2. High adaptability; The backend must adapt to disparate front-end technologies.
+
+3. Many of the 12-factor application principles can be deligently incorporated into the design to
+   attain a microservices pattern to result in a more resilient and a supportable system.
+
+4. Frameworks will be used where necessary, to avoid re-implementing established patterns. However,
+   avoid frameworks that are overly loaded or that would sacrifice the simplicity of the design.
+
+5. If the policies require encrypted transmission for the internal traffic, the transmission of the
+   metrics must be encrypted. Other security requirements relating to the exposing of the metrics
+   must be incorporated.
+
+6. The observing system must only be sufficiently close to the observed system to fulfill the stated
+   requirements. It must not incorporate a notable perturbation to the observed system.
+
+----------------------------------------------------------------------------------------------------
+C. Architectural and design choices
+----------------------------------------------------------------------------------------------------
+
+There are multiple inbuilt tools and methods to observe or extract the runtime metrics of an
+application running in a jvm.
+
+1. JVM tool interface API (JVMTI) involve a shared library to dynamically load with the jvm.
+2. The java alternative to the JVMTI involve a jar file to be included that is loaded by the jvm.
+3. JDK provides jstatd which is a deamon that is used by some of the inbuilt java tools.
+4. Java management extensions (JMX) API will aloow consumers to sample the metrics as needed.
+
+JVMTI and javaagent options will allow a push pattern from the JVM where events can be streamed and
+the consumers can subscribe to the events. The other options will allow a pull pattern. While jstatd
+would run as a separate deamon process, JMX would require the JVM parameters be specified.
+
+All the above options require a specific port be opened to transmit the metric to a receiving
+server. Alternatively the metrics can be transmitted via a secure ssh tunnel if ssh tunnelling is
+allowed.
+
+----------------------------------------------------------------------------------------------------
+D. Application frameworks
+----------------------------------------------------------------------------------------------------
+
+The primary criteria for choosing the following frameworks is the performance by avoidance of
+re-writing established patterns. Additional criteria is the maturity of the framework thus the
+supportability.
+
+A micro-service architectural framework provides better adaptability, and a cleaner design.
+Microprofile which is a small subset of JavaEE specifications will enable design with restful
+endpoints.
+
+AJAX provides a bi-directonal and asynchronous communication between the browser and the server
+which results in better performance. AJAX consists of server-side and browser-side operations.
+Angular is a browser-side AJAX javascript framework.
+
+----------------------------------------------------------------------------------------------------
+E. Topology
+----------------------------------------------------------------------------------------------------
+
+The observerved JVM listens on the JMX port over which recieving server(s) communicate. Metric data
+is analysed by the system for offending events and presented to the clients.
+
+Recieving servers can be clustered and fronted by a set of nginx servers.
+
+The design would separate this tier in a fashion that configuration elements can be presented in a
+similar fashion as the runtime events. The difference is in the method of extraction. The
+configuration metrics are extracted from the platform configuration artifacts.
+
+Metrics can be extracted from exiting tooling in cases where such tooling is already available and
+allow such interfacing, but such use will add additional layer and dependencies thus can compromise
+the requirements to an extent in addition to the license implications.
+
+----------------------------------------------------------------------------------------------------
+
